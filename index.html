@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="uz">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,14 +10,17 @@
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  
+
   <!-- Custom CSS -->
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-slate-900 text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+
+<body
+  class="bg-slate-900 text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
 
   <!-- Main Header -->
-  <header class="bg-slate-800/80 backdrop-blur-md border-b border-slate-700/80 px-6 py-3.5 flex justify-between items-center sticky top-0 z-30 no-print">
+  <header
+    class="bg-slate-800/80 backdrop-blur-md border-b border-slate-700/80 px-6 py-3.5 flex justify-between items-center sticky top-0 z-30 no-print">
     <div class="flex items-center gap-3">
       <div class="bg-indigo-600 text-white font-extrabold p-2 rounded-xl text-lg shadow-lg shadow-indigo-600/30">
         POS
@@ -30,27 +34,27 @@
     <!-- Quick Barcode Scanner & Search Status -->
     <div class="flex items-center gap-4">
       <div class="relative w-80">
-        <input 
-          type="text" 
-          id="barcode-input" 
-          placeholder="Shtrix-kodni skanerlang yoki kiriting..." 
+        <input type="text" id="barcode-input" placeholder="Shtrix-kodni skanerlang yoki kiriting..."
           class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-10 pr-12 py-2 text-xs focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-indigo-300 font-mono transition-all"
-          autocomplete="off"
-        >
-        <svg class="w-4 h-4 absolute left-3 top-2.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          autocomplete="off">
+        <svg class="w-4 h-4 absolute left-3 top-2.5 text-slate-500" fill="none" stroke="currentColor"
+          viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
         </svg>
-        <span class="absolute right-2.5 top-2 text-[10px] bg-slate-800 text-slate-400 border border-slate-700 px-1.5 py-0.5 rounded font-mono">
+        <span
+          class="absolute right-2.5 top-2 text-[10px] bg-slate-800 text-slate-400 border border-slate-700 px-1.5 py-0.5 rounded font-mono">
           F4
         </span>
       </div>
 
       <!-- Role Switcher (RBAC) -->
       <div class="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-700/80">
-        <button id="role-admin-btn" onclick="setRole('admin')" class="px-3 py-1.5 text-xs rounded-lg font-medium transition-all">
+        <button id="role-admin-btn" onclick="setRole('admin')"
+          class="px-3 py-1.5 text-xs rounded-lg font-medium transition-all">
           Admin
         </button>
-        <button id="role-cashier-btn" onclick="setRole('cashier')" class="px-3 py-1.5 text-xs rounded-lg font-medium transition-all">
+        <button id="role-cashier-btn" onclick="setRole('cashier')"
+          class="px-3 py-1.5 text-xs rounded-lg font-medium transition-all">
           Kassir
         </button>
       </div>
@@ -59,29 +63,48 @@
 
   <!-- Main Work Area -->
   <main class="flex-1 p-6 grid grid-cols-12 gap-6 max-w-[1800px] w-full mx-auto no-print">
-    
+
     <!-- Left Column: Products Catalog -->
     <section class="col-span-12 lg:col-span-8 flex flex-col gap-4">
-      
+
       <!-- Top Filters & Search -->
-      <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-800/40 p-3 rounded-2xl border border-slate-700/50">
+      <div
+        class="flex flex-wrap items-center justify-between gap-3 bg-slate-800/40 p-3 rounded-2xl border border-slate-700/50">
         <div class="relative flex-1 min-w-[240px]">
-          <input 
-            type="text" 
-            id="search-input" 
-            oninput="renderProducts()" 
-            placeholder="Mahsulot nomi bo'yicha qidirish..." 
-            class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-9 pr-4 py-2 text-xs focus:outline-none focus:border-indigo-500 transition-all text-slate-200"
-          >
-          <svg class="w-4 h-4 absolute left-3 top-2.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          <input type="text" id="search-input" oninput="renderProducts()"
+            placeholder="Mahsulot nomi bo'yicha qidirish..."
+            class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-9 pr-4 py-2 text-xs focus:outline-none focus:border-indigo-500 transition-all text-slate-200">
+          <svg class="w-4 h-4 absolute left-3 top-2.5 text-slate-500" fill="none" stroke="currentColor"
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
           </svg>
         </div>
 
-      <!-- YANGI MAHSULOT TUGMASI (Mana shu yerga qo'shiladi) -->
-          <button id="open-product-modal-btn" class="btn-add-product">
-            + Yangi Mahsulot
-          </button>
+        <!-- Mahsulot qo'shish tugmasi -->
+        <button id="openAddProduct" class="yangi">+ Yangi Mahsulot</button>
+
+        <!-- Mahsulotlar chiqadigan joy (o'zingizdagi mavjud konteynerga moslang) -->
+        <div id="productGrid"></div>
+
+        <!-- Modal oyna -->
+        <div id="addProductOverlay" class="modal-overlay">
+          <div class="modal">
+            <div class="modal-head">
+              <h3>Yangi Mahsulot Qo'shish</h3>
+              <button id="closeAddProduct">×</button>
+            </div>
+            <form id="addProductForm">
+              <label>Mahsulot nomi
+                <input type="text" id="productName" required>
+              </label>
+              <label>Narxi (UZS)
+                <input type="number" id="productPrice" min="0" required>
+              </label>
+              <button type="submit">Qo'shish</button>
+            </form>
+          </div>
+        </div>
 
         <!-- Categories -->
         <div id="category-filters" class="flex items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0 scrollbar-none">
@@ -90,30 +113,28 @@
       </div>
 
       <!-- Products Grid -->
-      <div 
-        id="products-grid" 
-        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5 overflow-y-auto max-h-[calc(100vh-210px)] pr-1"
-      >
+      <div id="products-grid"
+        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5 overflow-y-auto max-h-[calc(100vh-210px)] pr-1">
         <!-- Cards generated by JS -->
       </div>
     </section>
 
     <!-- Right Column: Cart & Payment -->
-    <aside class="col-span-12 lg:col-span-4 bg-slate-800/80 backdrop-blur-md border border-slate-700/80 rounded-2xl p-5 flex flex-col justify-between h-[calc(100vh-120px)] sticky top-[76px] shadow-2xl">
-      
+    <aside
+      class="col-span-12 lg:col-span-4 bg-slate-800/80 backdrop-blur-md border border-slate-700/80 rounded-2xl p-5 flex flex-col justify-between h-[calc(100vh-120px)] sticky top-[76px] shadow-2xl">
+
       <!-- Cart Header -->
       <div class="flex flex-col h-full overflow-hidden">
         <div class="flex justify-between items-center border-b border-slate-700/80 pb-3.5 mb-3">
           <div class="flex items-center gap-2">
             <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
             </svg>
             <h2 class="font-bold text-base text-slate-100">Xarid Savatchasi</h2>
           </div>
-          <button 
-            onclick="clearCart()" 
-            class="text-xs text-rose-400 hover:text-rose-300 transition-colors font-medium hover:underline"
-          >
+          <button onclick="clearCart()"
+            class="text-xs text-rose-400 hover:text-rose-300 transition-colors font-medium hover:underline">
             Tozalash
           </button>
         </div>
@@ -134,17 +155,16 @@
           <span>QQS (12%):</span>
           <span id="tax-val" class="font-semibold text-slate-200">0 UZS</span>
         </div>
-        
-        <div class="flex justify-between items-center text-lg font-bold text-emerald-400 border-t border-slate-700/60 pt-3 mt-1">
+
+        <div
+          class="flex justify-between items-center text-lg font-bold text-emerald-400 border-t border-slate-700/60 pt-3 mt-1">
           <span>To'lov summasi:</span>
           <span id="total-val" class="text-xl">0 UZS</span>
         </div>
 
         <!-- Checkout Action Button -->
-        <button 
-          onclick="processCheckout()" 
-          class="w-full bg-indigo-600 hover:bg-indigo-500 active:scale-[0.99] text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2 mt-2"
-        >
+        <button onclick="processCheckout()"
+          class="w-full bg-indigo-600 hover:bg-indigo-500 active:scale-[0.99] text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2 mt-2">
           <span>To'lovni Amalga Oshirish</span>
           <span class="text-[10px] bg-indigo-700 border border-indigo-400/30 px-2 py-0.5 rounded font-mono">F2</span>
         </button>
@@ -158,15 +178,15 @@
     <div class="text-center font-bold text-sm uppercase tracking-wider">"PRO RETAIL" MCHJ</div>
     <div class="text-center text-[10px]">Toshkent sh., Chilonzor t. 10-mavze</div>
     <div class="text-center text-[10px] mb-2">STIR: 309812734 | Chek №<span id="rec-id">0000</span></div>
-    
+
     <div class="border-b border-black border-dashed my-2"></div>
-    
+
     <div id="rec-items" class="space-y-1 text-[11px]">
       <!-- Receipt lines populated dynamically -->
     </div>
-    
+
     <div class="border-b border-black border-dashed my-2"></div>
-    
+
     <div class="space-y-0.5 text-[11px]">
       <div class="flex justify-between">
         <span>Oraliq:</span>
@@ -190,4 +210,5 @@
   <!-- Custom JS -->
   <script src="script.js"></script>
 </body>
+
 </html>

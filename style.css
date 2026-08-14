@@ -18,8 +18,8 @@
   background: #475569;
 }
 
-/* Yangi mahsulot tugmasi uslubi */
-.btn-add-product {
+/* Mahsulot qo'shish tugmasi */
+.yangi {
   background-color: #4f46e5; /* Safsar/ko'k rang */
   color: #ffffff;
   border: none;
@@ -32,19 +32,90 @@
   transition: all 0.2s ease;
 }
 
-.btn-add-product:hover {
-  background-color: #4338ca;
-  transform: translateY(-1px);
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, .6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
 }
 
-.btn-add-product:active {
-  transform: translateY(0);
+.modal-overlay.is-open {
+  display: flex;
+}
+
+.modal {
+  background: #1a2029;
+  color: #fff;
+  border-radius: 12px;
+  width: 320px;
+  padding: 18px;
+}
+
+.modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.modal-head button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+
+#addProductForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#addProductForm label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: .85rem;
+}
+
+#addProductForm input {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #333;
+  background: #12161d;
+  color: #fff;
+}
+
+#addProductForm button[type=submit] {
+  background: #4f46e5;
+  color: #1a1200;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.product-card {
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 10px;
+  margin: 6px 0;
+  display: flex;
+  justify-content: space-between;
+  background: #1a2029;
+  color: #fff;
 }
 
 /* Hide Scrollbar for category horizontal scroll */
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
+
 .scrollbar-none {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -60,11 +131,12 @@ input:focus {
   body * {
     visibility: hidden;
   }
-  
-  #receipt-print-area, #receipt-print-area * {
+
+  #receipt-print-area,
+  #receipt-print-area * {
     visibility: visible;
   }
-  
+
   #receipt-print-area {
     display: block !important;
     position: absolute;
@@ -77,7 +149,7 @@ input:focus {
     color: #000000;
     font-family: 'Courier New', Courier, monospace;
   }
-  
+
   .no-print {
     display: none !important;
   }

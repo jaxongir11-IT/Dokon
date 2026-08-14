@@ -96,6 +96,47 @@ function handleBarcodeScan(code) {
   }
 }
 
+const openBtn = document.getElementById("openAddProduct");
+const overlay = document.getElementById("addProductOverlay");
+const closeBtn = document.getElementById("closeAddProduct");
+const form = document.getElementById("addProductForm");
+const grid = document.getElementById("productGrid");
+
+// Modalni ochish
+openBtn.addEventListener("click", () => {
+  overlay.classList.add("is-open");
+});
+
+// Modalni yopish
+closeBtn.addEventListener("click", () => {
+  overlay.classList.remove("is-open");
+  form.reset();
+});
+
+// "Qo'shish" bosilganda
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const name = document.getElementById("productName").value.trim();
+  const price = parseFloat(document.getElementById("productPrice").value);
+
+  if (!name || isNaN(price) || price < 0) return;
+
+  // Yangi mahsulot kartochkasini yaratish
+  const card = document.createElement("div");
+  card.className = "product-card";
+  card.innerHTML = `
+    <span>${name}</span>
+    <span>${new Intl.NumberFormat("uz-UZ").format(price)} UZS</span>
+  `;
+
+  // Kategoriyaga (grid ichiga) qo'shish
+  grid.appendChild(card);
+
+  overlay.classList.remove("is-open");
+  form.reset();
+});
+
 // 5. Render Categories & Products
 function renderCategories() {
   const categories = ['Barchasi', ...new Set(products.map(p => p.category))];

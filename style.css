@@ -18,6 +18,29 @@
   background: #475569;
 }
 
+/* Yangi mahsulot tugmasi uslubi */
+.btn-add-product {
+  background-color: #4f46e5; /* Safsar/ko'k rang */
+  color: #ffffff;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap; /* Matn pastga tushib ketmasligi uchun */
+  transition: all 0.2s ease;
+}
+
+.btn-add-product:hover {
+  background-color: #4338ca;
+  transform: translateY(-1px);
+}
+
+.btn-add-product:active {
+  transform: translateY(0);
+}
+
 /* Hide Scrollbar for category horizontal scroll */
 .scrollbar-none::-webkit-scrollbar {
   display: none;

@@ -1,60 +1,77 @@
 <!DOCTYPE html>
-<html lang="uz">
+<html lang="uz" class="dark">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="PRO RETAIL - Enterprise Web POS Cashier System">
   <title>PRO RETAIL - Web POS Terminal</title>
 
-  <link rel="icon" type="logo.png" href="Firefly.png">
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="Firefly.png">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca' }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Html5-QRCode kutubxonasi (kamera orqali shtrix-kod / QR skanerlash uchun) -->
+  <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
   <!-- Custom CSS -->
   <link rel="stylesheet" href="style.css">
 </head>
 
-<body
-  class="bg-slate-900 text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+<body class="bg-slate-900 text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
 
-  <!-- Main Header -->
-  <header
-    class="bg-slate-800/80 backdrop-blur-md border-b border-slate-700/80 px-6 py-3.5 flex justify-between items-center sticky top-0 z-30 no-print">
+  <!-- Header -->
+  <header class="bg-slate-800/90 backdrop-blur-md border-b border-slate-700/80 px-4 md:px-6 py-3 flex flex-wrap justify-between items-center sticky top-0 z-30 no-print gap-3">
     <div class="flex items-center gap-3">
-      <div class="bg-indigo-600 text-white font-extrabold p-2 rounded-xl text-lg shadow-lg shadow-indigo-600/30">
+      <div class="bg-indigo-600 text-white font-black p-2 rounded-xl text-lg shadow-lg shadow-indigo-600/30">
         POS
       </div>
       <div>
-        <h1 class="text-lg font-bold tracking-wide leading-none text-slate-100">PRO RETAIL</h1>
+        <h1 class="text-base md:text-lg font-bold tracking-wide leading-none text-slate-100" id="header-store-name">PRO RETAIL</h1>
         <span class="text-[11px] text-slate-400 font-medium">Enterprise Cashier System v2.5</span>
       </div>
     </div>
 
-    <!-- Quick Barcode Scanner & Search Status -->
-    <div class="flex items-center gap-4">
-      <div class="relative w-80">
-        <input type="text" id="barcode-input" placeholder="Shtrix-kodni skanerlang yoki kiriting..."
-          class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-10 pr-12 py-2 text-xs focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-indigo-300 font-mono transition-all"
-          autocomplete="off">
-        <svg class="w-4 h-4 absolute left-3 top-2.5 text-slate-500" fill="none" stroke="currentColor"
-          viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-        </svg>
-        <span
-          class="absolute right-2.5 top-2 text-[10px] bg-slate-800 text-slate-400 border border-slate-700 px-1.5 py-0.5 rounded font-mono">
-          F4
-        </span>
+    <!-- Scanner input, Pass Settings & Role switcher -->
+    <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+      <div class="relative flex-1 sm:w-64">
+        <input type="text" id="barcode-input" placeholder="Shtrix-kodni skanerlang..."
+          class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-9 pr-10 py-2 text-xs focus:outline-none focus:border-indigo-500 text-indigo-300 font-mono transition-all">
+        <i class="fa-solid fa-barcode absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+        <button id="camera-scan-btn" type="button" title="Kamera bilan skanerlash (QR / shtrix-kod)"
+          class="absolute right-1.5 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg transition-all active:scale-95">
+          <i class="fa-solid fa-camera text-xs"></i>
+        </button>
       </div>
 
-      <!-- Role Switcher (RBAC) -->
+      <!-- Password Settings Button -->
+      <button id="openPassSettingsBtn" title="Parollarni O'zgartirish" class="p-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-slate-300 transition-all">
+        <i class="fa-solid fa-gear"></i>
+      </button>
+
+      <!-- Role switcher -->
       <div class="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-700/80">
-        <button id="role-admin-btn" onclick="setRole('admin')"
-          class="px-3 py-1.5 text-xs rounded-lg font-medium transition-all">
+        <button id="role-admin-btn" class="px-3 py-1.5 text-xs rounded-lg font-medium transition-all">
           Admin
         </button>
-        <button id="role-cashier-btn" onclick="setRole('cashier')"
-          class="px-3 py-1.5 text-xs rounded-lg font-medium transition-all">
+        <button id="role-cashier-btn" class="px-3 py-1.5 text-xs rounded-lg font-medium transition-all">
           Kassir
         </button>
       </div>
@@ -62,129 +79,209 @@
   </header>
 
   <!-- Main Work Area -->
-  <main class="flex-1 p-6 grid grid-cols-12 gap-6 max-w-[1800px] w-full mx-auto no-print">
+  <main class="flex-1 p-4 md:p-6 grid grid-cols-12 gap-6 max-w-[1800px] w-full mx-auto no-print">
 
-    <!-- Left Column: Products Catalog -->
+    <!-- Catalog Section -->
     <section class="col-span-12 lg:col-span-8 flex flex-col gap-4">
 
-      <!-- Top Filters & Search -->
-      <div
-        class="flex flex-wrap items-center justify-between gap-3 bg-slate-800/40 p-3 rounded-2xl border border-slate-700/50">
-        <div class="relative flex-1 min-w-[240px]">
-          <input type="text" id="search-input" oninput="renderProducts()"
-            placeholder="Mahsulot nomi bo'yicha qidirish..."
+      <!-- Top Toolbar -->
+      <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-800/40 p-3 rounded-2xl border border-slate-700/50">
+        <div class="relative flex-1 min-w-[200px]">
+          <input type="text" id="search-input" placeholder="Mahsulot nomi yoki shtrix-kod..."
             class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-9 pr-4 py-2 text-xs focus:outline-none focus:border-indigo-500 transition-all text-slate-200">
-          <svg class="w-4 h-4 absolute left-3 top-2.5 text-slate-500" fill="none" stroke="currentColor"
-            viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-          </svg>
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
         </div>
 
-        <!-- Mahsulot qo'shish tugmasi -->
-        <button id="openAddProduct" class="yangi">+ Yangi Mahsulot</button>
+        <button id="openAddProduct" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold transition-all shadow-md active:scale-95 flex items-center gap-1.5">
+          <i class="fa-solid fa-plus text-xs"></i>
+          <span>Yangi Mahsulot</span>
+        </button>
 
-        <!-- Mahsulotlar chiqadigan joy (o'zingizdagi mavjud konteynerga moslang) -->
-        <div id="productGrid"></div>
-
-        <!-- Modal oyna -->
-        <div id="addProductOverlay" class="modal-overlay">
-          <div class="modal">
-            <div class="modal-head">
-              <h3>Yangi Mahsulot Qo'shish</h3>
-              <button id="closeAddProduct">×</button>
-            </div>
-            <form id="addProductForm">
-              <label>Mahsulot nomi
-                <input type="text" id="productName" required>
-              </label>
-              <label>Narxi (UZS)
-                <input type="number" id="productPrice" min="0" required>
-              </label>
-              <button type="submit">Qo'shish</button>
-            </form>
-          </div>
-        </div>
-
-        <!-- Categories -->
-        <div id="category-filters" class="flex items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0 scrollbar-none">
-          <!-- Dynamically populated buttons -->
+        <div id="category-filters" class="flex items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0 scrollbar-none w-full md:w-auto">
+          <!-- Categories injected by JS -->
         </div>
       </div>
 
       <!-- Products Grid -->
-      <div id="products-grid"
-        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5 overflow-y-auto max-h-[calc(100vh-210px)] pr-1">
-        <!-- Cards generated by JS -->
+      <div id="products-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5 overflow-y-auto max-h-[calc(100vh-220px)] pr-1">
+        <!-- Products injected by JS -->
       </div>
     </section>
 
-    <!-- Right Column: Cart & Payment -->
-    <aside
-      class="col-span-12 lg:col-span-4 bg-slate-800/80 backdrop-blur-md border border-slate-700/80 rounded-2xl p-5 flex flex-col justify-between h-[calc(100vh-120px)] sticky top-[76px] shadow-2xl">
+    <!-- Cart Section -->
+    <aside class="col-span-12 lg:col-span-4 bg-slate-800/80 backdrop-blur-md border border-slate-700/80 rounded-2xl p-5 flex flex-col justify-between lg:h-[calc(100vh-120px)] lg:sticky top-[76px] shadow-2xl">
 
-      <!-- Cart Header -->
       <div class="flex flex-col h-full overflow-hidden">
         <div class="flex justify-between items-center border-b border-slate-700/80 pb-3.5 mb-3">
           <div class="flex items-center gap-2">
-            <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-            </svg>
+            <i class="fa-solid fa-basket-shopping text-indigo-400"></i>
             <h2 class="font-bold text-base text-slate-100">Xarid Savatchasi</h2>
           </div>
-          <button onclick="clearCart()"
-            class="text-xs text-rose-400 hover:text-rose-300 transition-colors font-medium hover:underline">
+          <button id="clear-cart-btn" class="text-xs text-rose-400 hover:text-rose-300 transition-colors font-medium hover:underline">
             Tozalash
           </button>
         </div>
 
-        <!-- Cart Items List -->
-        <div id="cart-items" class="flex-1 overflow-y-auto space-y-2.5 pr-1 my-1">
-          <!-- Items injected via JS -->
+        <div id="cart-items" class="flex-1 overflow-y-auto space-y-2.5 pr-1 my-1 min-h-[180px]">
+          <!-- Cart items injected by JS -->
         </div>
       </div>
 
-      <!-- Cart Financial Summary -->
-      <div class="border-t border-slate-700/80 pt-4 space-y-2.5 mt-2 bg-slate-800">
+      <!-- Financial Calculations -->
+      <div class="border-t border-slate-700/80 pt-4 space-y-2 mt-2 bg-slate-800/50">
         <div class="flex justify-between text-xs text-slate-400">
           <span>Oraliq summa:</span>
           <span id="subtotal-val" class="font-semibold text-slate-200">0 UZS</span>
         </div>
         <div class="flex justify-between text-xs text-slate-400">
-          <span>QQS (12%):</span>
+          <span>QQS (12% kiritilgan):</span>
           <span id="tax-val" class="font-semibold text-slate-200">0 UZS</span>
         </div>
 
-        <div
-          class="flex justify-between items-center text-lg font-bold text-emerald-400 border-t border-slate-700/60 pt-3 mt-1">
+        <div class="flex justify-between items-center text-lg font-bold text-emerald-400 border-t border-slate-700/60 pt-3 mt-1">
           <span>To'lov summasi:</span>
-          <span id="total-val" class="text-xl">0 UZS</span>
+          <span id="total-val" class="text-xl font-mono">0 UZS</span>
         </div>
 
-        <!-- Checkout Action Button -->
-        <button onclick="processCheckout()"
-          class="w-full bg-indigo-600 hover:bg-indigo-500 active:scale-[0.99] text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2 mt-2">
+        <button id="checkout-btn" class="w-full bg-indigo-600 hover:bg-indigo-500 active:scale-[0.99] text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2 mt-2">
           <span>To'lovni Amalga Oshirish</span>
-          <span class="text-[10px] bg-indigo-700 border border-indigo-400/30 px-2 py-0.5 rounded font-mono">F2</span>
+          <span class="text-[10px] bg-indigo-700 border border-indigo-400/30 px-2 py-0.5 rounded font-mono hidden sm:inline">F2</span>
         </button>
       </div>
 
     </aside>
   </main>
 
-  <!-- Thermal Receipt Layout (80mm Paper Format) -->
+  <!-- Add Product Modal -->
+  <div id="addProductOverlay" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div class="bg-slate-800 border border-slate-700 w-full max-w-md p-6 rounded-2xl shadow-2xl relative mx-4">
+      <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-700">
+        <h3 class="text-base font-bold text-slate-100">Yangi Mahsulot Qo'shish</h3>
+        <button id="closeAddProduct" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
+      </div>
+      <form id="addProductForm" class="space-y-3.5">
+        <div>
+          <label for="productName" class="block text-xs font-medium text-slate-300 mb-1">Mahsulot nomi</label>
+          <input type="text" id="productName" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="productPrice" class="block text-xs font-medium text-slate-300 mb-1">Narxi (UZS)</label>
+            <input type="number" id="productPrice" min="0" step="100" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500">
+          </div>
+          <div>
+            <label for="productStock" class="block text-xs font-medium text-slate-300 mb-1">Soni (Ombor)</label>
+            <input type="number" id="productStock" min="1" value="10" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="productCategory" class="block text-xs font-medium text-slate-300 mb-1">Kategoriya</label>
+            <input type="text" id="productCategory" placeholder="masalan: Ichimliklar" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500">
+          </div>
+          <div>
+            <label for="productBarcode" class="block text-xs font-medium text-slate-300 mb-1">Shtrix-kod</label>
+            <div class="relative">
+              <input type="text" id="productBarcode" required class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-3 pr-9 py-2 text-xs font-mono text-indigo-300 focus:outline-none focus:border-indigo-500">
+              <button type="button" id="scanForNewProductBtn" title="Kamera bilan skanerlash" class="absolute right-1.5 top-1/2 -translate-y-1/2 p-1.5 text-slate-400 hover:text-indigo-400 transition-colors">
+                <i class="fa-solid fa-camera text-xs"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-xl text-xs transition-all shadow-lg shadow-indigo-600/30 mt-2">
+          Saqlash
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Camera Scanner Modal -->
+  <div id="cameraScanModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-sm z-[60] flex items-center justify-center hidden">
+    <div class="bg-slate-800 border border-slate-700 w-full max-w-sm p-5 rounded-2xl shadow-2xl relative mx-4">
+      <div class="flex justify-between items-center mb-3">
+        <h3 class="text-sm font-bold text-slate-100 flex items-center gap-2">
+          <i class="fa-solid fa-camera text-indigo-400"></i>
+          Kamera bilan skanerlash
+        </h3>
+        <button id="closeCameraScanBtn" class="text-slate-400 hover:text-white text-xl font-bold leading-none">&times;</button>
+      </div>
+      <div id="camera-reader" class="rounded-xl overflow-hidden bg-black min-h-[240px] flex items-center justify-center"></div>
+      <p id="camera-scan-status" class="text-[11px] text-slate-400 mt-3 text-center min-h-[16px]">
+        Kamera ishga tushirilmoqda...
+      </p>
+    </div>
+  </div>
+
+  <!-- Role Auth Modal -->
+  <div id="roleAuthModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div class="bg-slate-800 border border-slate-700 w-full max-w-sm p-6 rounded-2xl shadow-2xl relative mx-4">
+      <h3 id="roleAuthTitle" class="text-base font-bold text-slate-100 mb-1">Kirish</h3>
+      <p id="roleAuthDesc" class="text-xs text-slate-400 mb-4">Iltimos, PIN kodni kiriting</p>
+      <form id="roleAuthForm" class="space-y-3">
+        <div class="relative flex items-center">
+          <input type="password" id="rolePassword" placeholder="PIN..." required
+            class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-3 pr-10 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-indigo-500 text-center tracking-widest text-base font-mono">
+          <button type="button" id="toggleRolePassBtn" class="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 transition-colors focus:outline-none flex items-center justify-center">
+            <i class="fa-solid fa-eye-slash text-sm"></i>
+          </button>
+        </div>
+        <div class="flex gap-2">
+          <button type="button" id="closeRoleAuthBtn" class="w-1/2 bg-slate-700 text-slate-300 font-semibold py-2 rounded-xl text-xs">
+            Bekor qilish
+          </button>
+          <button type="submit" class="w-1/2 bg-indigo-600 text-white font-bold py-2 rounded-xl text-xs">
+            Tasdiqlash
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Parollarni O'zgartirish Modali -->
+  <div id="passSettingsModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div class="bg-slate-800 border border-slate-700 w-full max-w-sm p-6 rounded-2xl shadow-2xl relative mx-4">
+      <h3 class="text-base font-bold text-slate-100 mb-1">Parollarni O'zgartirish</h3>
+      <p class="text-xs text-slate-400 mb-4">O'zingiz uchun yangi PIN kodlarni kiriting</p>
+      <form id="passSettingsForm" class="space-y-3.5">
+        <div>
+          <label for="newAdminPass" class="block text-xs font-medium text-slate-300 mb-1">Yangi Admin PIN</label>
+          <div class="relative flex items-center">
+            <input type="password" id="newAdminPass" required placeholder="Standart: 1234" class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-3 pr-10 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500 font-mono">
+            <button type="button" id="toggleAdminPassBtn" class="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 transition-colors focus:outline-none flex items-center justify-center">
+              <i class="fa-solid fa-eye-slash text-sm"></i>
+            </button>
+          </div>
+        </div>
+        <div>
+          <label for="newCashierPass" class="block text-xs font-medium text-slate-300 mb-1">Yangi Kassir PIN</label>
+          <div class="relative flex items-center">
+            <input type="password" id="newCashierPass" required placeholder="Standart: 0000" class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-3 pr-10 py-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500 font-mono">
+            <button type="button" id="toggleCashierPassBtn" class="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 transition-colors focus:outline-none flex items-center justify-center">
+              <i class="fa-solid fa-eye-slash text-sm"></i>
+            </button>
+          </div>
+        </div>
+        <div class="flex gap-2 pt-2">
+          <button type="button" id="closePassSettingsBtn" class="w-1/2 bg-slate-700 text-slate-300 font-semibold py-2 rounded-xl text-xs">
+            Bekor qilish
+          </button>
+          <button type="submit" class="w-1/2 bg-indigo-600 text-white font-bold py-2 rounded-xl text-xs">
+            Saqlash
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Receipt Thermal Print Area -->
   <div id="receipt-print-area" class="hidden text-black bg-white p-4 font-mono text-xs">
-    <div class="text-center font-bold text-sm uppercase tracking-wider">"PRO RETAIL" MCHJ</div>
-    <div class="text-center text-[10px]">Toshkent sh., Chilonzor t. 10-mavze</div>
-    <div class="text-center text-[10px] mb-2">STIR: 309812734 | Chek №<span id="rec-id">0000</span></div>
+    <div class="text-center font-bold text-sm uppercase tracking-wider" id="rec-store-name">"PRO RETAIL" MCHJ</div>
+    <div class="text-center text-[10px]" id="rec-store-address">Toshkent sh., Chilonzor t. 10-mavze</div>
+    <div class="text-center text-[10px] mb-2">STIR: <span id="rec-stir">309812734</span> | Chek №<span id="rec-id">0000</span></div>
 
     <div class="border-b border-black border-dashed my-2"></div>
-
-    <div id="rec-items" class="space-y-1 text-[11px]">
-      <!-- Receipt lines populated dynamically -->
-    </div>
-
+    <div id="rec-items" class="space-y-1 text-[11px]"></div>
     <div class="border-b border-black border-dashed my-2"></div>
 
     <div class="space-y-0.5 text-[11px]">
@@ -207,7 +304,6 @@
     </div>
   </div>
 
-  <!-- Custom JS -->
   <script src="script.js"></script>
 </body>
 
